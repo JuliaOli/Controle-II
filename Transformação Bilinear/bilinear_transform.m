@@ -69,8 +69,6 @@ for count = 1:vector_time
     vector_B(count) = B_K(count)
 end
 
->>>>>>> d808ed52bf35ab7c25d14b4a14158bb01e104993
-
 %Equacao generica de Routh-Hurwitz
 D = @(s1,s2,s3,s4) (-1)*((s1*s4)-(s2*s3))/s3;
 
