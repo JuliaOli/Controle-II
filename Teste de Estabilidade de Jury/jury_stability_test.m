@@ -64,6 +64,8 @@ Equ_sol_b_2 = solve(b2,K)
 Equ_sol_b_2_1 = abs(Equ_sol_b_2(1)) %peguei só a parte que deu certo descartei a outra
 
 % |c(n-2)| > |c0|
+%tem duas raizes deu ruim faz duas vezes!!!!
+%pega as maiores raizes e usa elas
 c0 = D(b1,b0,b0,b1) == 0
 %Equ_sol_c = solve(c0,K)
 
