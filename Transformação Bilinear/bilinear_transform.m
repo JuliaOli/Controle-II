@@ -81,6 +81,7 @@ figure(1)
 semilogy(Ts,K_final_1, 'k')
 hold on
 semilogy(Ts,K_final_2, 'r')
+title('Routh-Hurwitz')
 xlabel('T(Sample Time)')
 ylabel('K (Possible Values)')
 
