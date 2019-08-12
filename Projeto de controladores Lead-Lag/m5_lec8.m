@@ -34,5 +34,5 @@ equ = 1 -100/(w_g^2 *(1+w_g^2)) == 0
 equ_sol = solve(equ, w_g)
 W_G = equ_sol(2) %deu certo aqui
 
-phase = -90 - atan(W_G)
+phase = -90 - atan(W_G)*180/pi
 
