@@ -87,7 +87,7 @@ alpha = (1-sin(phi_max*pi/180))/(1+sin(phi_max*pi/180))
 %%
 w_max = 1.75 %nem sei de onde veio
 
-tetazinho = 1/(w_max*(alpha)^(1/2))
+tetazinho = 1/(w_max*(alpha)^(1/2))f
 
 num = [tetazinho 1];
 den = [tetazinho*alpha 1];
@@ -95,13 +95,16 @@ den = [tetazinho*alpha 1];
 C = tf(num, den)
 C = K*C
 margin(C)
-
-
+% 
 % num = [2.55 2.08];
 % den = [1 -0.53];
 % num = [0.99 1];
 % den = [0.327 1];
 % C_w = tf(num, den)
 % margin(K*C_w)
+
+
+
+
 
 
