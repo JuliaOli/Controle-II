@@ -35,7 +35,7 @@ equ_sol = solve(equ, w_g)
 W_G = equ_sol(2) %deu certo aqui
 
 phase = -90 - atan(W_G)*180/pi
-%margem de fase do sistema sem compensação para o valor de K dado. PM é 18
+%margem de fase do sistema sem compensao para o valor de K dado. PM = 18
 margin(G*K)
 % Defining The maximum phase corresponds to sin(φmax)
 
