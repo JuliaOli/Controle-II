@@ -1,38 +1,64 @@
-clear all
-clc
-
-%A typical lead compensator has the following transfer function.
-% C(s) = K*((τs + 1)/(ατ s + 1), where, α < 1
-% 1/α is the ratio between the pole zero break point (corner) frequencies. 
-
-%Magnitude of the lead compensator is K (√(1 + α^2*ω^2*τ^2))/(√(1 +
-%α^2*ω^2*τ^2)) And the phase contributed by the lead compensator is given by
-% φ = atan(ωτ) − atan(αωτ)
-
-%It can be shown that the frequency where the phase is maximum is given by
-% ω max = 1/τ√α
-
-%The maximum phase corresponds to sinφmax = (1-α)/(1+ α)
-% ⇒ α = (1 − sin(φ max ))/ (1 + sin(φ max ))
-% The magnitude of C(s) at ωmax is K/√α
-
+%Phase margin (PM) is at least 45 degrees, crossover frequency around 10 rad/sec and the velocity error constant Kv is 30.
 %% Exemplo 1
-
 num = 1;
-den = [1 1 0];
-G = tf(num,den);
-H = 1;
-% phase margin (PM) is at least 45 degrees
-% error for a unit ramp input is ≤ 0.1.
-% s → 0, C(s) → K
-% Steady state error for unit ramp input is 1/K
-% 1/K = 0.1
-K = 10
+den = [0.2 0.3 1 0];
+G = tf(num,den)
+K = 30
+%G = G*K
+margin(G*K)
+%Dados apresentados na quest�o n�o batem com os produzidos
+%**Since the PM of the uncompensated system with K is negative. We need a lead compensator to compensate for the negative PM and achieve the desired phase margin.
+%We design the lead part ?rst. From Figure 2, it is seen that at 10 rad/sec the phase angle of the system is ?198o. Since the new ?g should be 10 rad/sec, the required additional phase at ?g, to maintain the speci?ed PM, is 45?(180?198) = 63�. With safety margin 2�.***
+phi_max = 63;
+alpha = (1-sin(phi_max*pi/180))/(1+sin(phi_max*pi/180))
+w_max = 10;
+tau = 1/(w_max*(alpha)^(1/2))
 
-syms w_g
-equ = 1 -100/(w_g^2 *(1+w_g^2)) == 0
-equ_sol = solve(equ, w_g)
-W_G = equ_sol(2) %deu certo aqui
-
-phase = -90 - atan(W_G)*180/pi
-
+num = [tau 1];
+den = [tau*alpha 1];
+C_lead = tf(num, den)
+%A introdu��o desse compensador aumentar� a frequ�ncia de crossover de ganho, onde a caracter�stica da fase ser� diferente da designada.
+% Resposta de frequ�ncia do sistema no Exemplo 1 com apenas um compensador
+% de avan�o.%
+%**Novamente � apresentado resultados diferentes
+margin(K*C_lead)
+%Em altas frequ�ncias, a magnitude da parte do compensador de atraso � 1 / ?.
+20 log 10 ? 1 = 12 . 6 ?? 1 = 4 . 27
+%%
+syms alpha_1
+alpha_high = 20*log10(alpha_1) == 12.6;
+alpha_solve = solve(alpha_high)
+alpha_solve = 4.2
+tau = 1/0.25
+num = [tau 1];
+den = [tau*alpha_solve 1];
+C_comp = tf(num, den)
+margin(C_comp)
+C_final = K*C_comp*C_lead
+margin(C_final)
+Exemplo 2
+%% 
+s= tf('s'); 
+gc=1/(s*(1+0.1*s)*(1+0.2*s)); 
+gz=c2d(gc,0.1,'zoh')
+aug=[0.1,1]; 
+gwss = bilin(ss(gz),-1,'S_Tust',aug);
+gw=tf(gwss)
+margin(30*gw)
+phi_max = 66;
+alpha_2 = (1-sin(phi_max*pi/180))/(1+sin(phi_max*pi/180))
+w_max = 10;
+tau = 1/(w_max*(alpha_2)^(1/2))
+num = [tau 1];
+den = [tau*alpha_2 1];
+C_lead = tf(num, den)
+margin(30*C_lead)
+syms alpha_1
+alpha_high = 20*log10(alpha_1) == 14.2;
+alpha_solve = solve(alpha_high)
+alpha_solve = 5.12;
+tau = 1
+num = [tau 1];
+den = [tau*alpha_solve 1];
+C_comp = tf(num, den)
+margin(30*C_lead*C_comp)

@@ -1,0 +1,45 @@
+clear all
+clc
+
+%A typical lead compensator has the following transfer function.
+% C(s) = K*((τs + 1)/(ατ s + 1), where, α < 1
+% 1/α is the ratio between the pole zero break point (corner) frequencies. 
+
+%Magnitude of the lead compensator is K (√(1 + α^2*ω^2*τ^2))/(√(1 +
+%α^2*ω^2*τ^2)) And the phase contributed by the lead compensator is given by
+% φ = atan(ωτ) − atan(αωτ)
+
+%It can be shown that the frequency where the phase is maximum is given by
+% ω max = 1/τ√α
+
+%The maximum phase corresponds to sinφmax = (1-α)/(1+ α)
+% ⇒ α = (1 − sin(φ max ))/ (1 + sin(φ max ))
+% The magnitude of C(s) at ωmax is K/√α
+
+%% Exemplo 1
+
+num = 1;
+den = [0.2 0.3 1 0];
+G = tf(num,den)
+% phase margin (PM) is at least 45 degrees
+% crossover frequency around 10 rad/sec
+% and the velocity error constant Kv is 30.
+K = 30
+%G = G*K
+margin(G*K)
+%%
+%Since the PM of the uncompensated system with K is negative.
+%We need a lead compensator to compensate for the negative PM and achieve the desired phase margin.
+
+%We design the lead part ?rst.
+%From Figure 2, it is seen that at 10 rad/sec the phase angle of the system is ?198o. 
+
+%Since the new ?g should be 10 rad/sec, the required additional phase at ?g, 
+%to maintain the speci?ed PM, is 45?(180?198) = 63�. With safety margin 2�, 
+
+phi_max = 63;
+alpha = (1-sin(phi_max*pi/180))/(1+sin(phi_max*pi/180))
+
+1/(w_max*(alpha)^(1/2))
+tau = 1/10*(alpha)^1/2
+

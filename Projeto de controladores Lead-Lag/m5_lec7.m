@@ -55,11 +55,19 @@ margin(C*9)
 
 s=tf('s');
 gc=1/(s*(1+0.1*s)*(1+0.2*s));
-gz=c2d(gc,0.1,'z2h')
+gz=c2d(gc,0.1,'zoh')
 aug=[0.1 1];
 gwss = bilin(ss(gz),-1,'S_Tust',aug);
 gw=tf(gwss)
 
+%Since Gw(0) = 1, K? = 9 for 0.1 steady state error.
+aug=[0.1 1];
+
+gwss = bilin(ss(gz),-1,'S_Tust',aug);
+gw=tf(gwss)
+
+%Since Gw(0) = 1, K? = 9 for 0.1 steady state error.
+margin(gw)
 
 
 
