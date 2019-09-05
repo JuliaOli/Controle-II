@@ -46,6 +46,9 @@ T = (P(1) + P(2))/num_g_z(2)
 %%
 G_c =feedback(G_z*(1/R),S_s)
 %G_final = T*
+figure(1)
 step(G_c)
-
-
+figure(2)
+r = [zeros(1,100) 3*ones(1,100) 2*ones(1,100) 4*ones(1,100) 5*ones(1,100)]
+t = 0:1:499;
+lsim(G_c,r,t)

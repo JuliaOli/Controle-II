@@ -17,17 +17,16 @@ x = [x0 zeros(2,length(Ts)-1)];
 A = [0 1; -1 1];
 B = [0; 1];
 C = [2 0];
-Ge = [0.5; 0];
-G = [-0.654 0.486];
-R = ones(1,length(Ts)-1);
 
+Ge = [-0.654;0.486];
+R = ones(1,length(Ts)-1);
 for i = 1:1:length(Ts)-1
     xe(1:end, i+1) = (A-Ge*C)*xe(1:end,i)+Ge*C*x(1:end,i)+B*R(i);
-    x(1:end, i+1) = A*x(1:end,i)+B*R(i)-G*B*x(1:end,i);
+    x(1:end, i+1) = A*x(1:end,i)+B*R(i);
 end
 
 figure(1)
 subplot(2,2,1)
-plot(xe(1:end))
+plot(Ts,xe(1, Ts), 'LineWidth',2)
 hold on
-plot(x(1:end))
+plot(x)
