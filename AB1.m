@@ -8,7 +8,7 @@ G = tf(num,den);
 
 [A,B,C,D] = tf2ss(num,den)
 
-%% Verifique se o sistema é controlável e observável
+% Verifique se o sistema é controlável e observável
 
 %O posto de C M é igual ao número de linhas ou colunas linearmente independentes. O posto pode ser obtido determinando-se a
 %submatriz quadrada de maior ordem que é não singular. O determinante de C M é – 1. Como o determinante é diferente de
@@ -34,7 +34,7 @@ p_o = rank(O_m)
 
 %Então como o posto é igual a matriz, o mesmo é observável e controlável
 
-%% Posicione os polos do sistema controlado em s = −0, 707 ± j0, 707 e avalie a resposta do sistema para uma entrada do tipo degrau unitário
+% Posicione os polos do sistema controlado em s = −0, 707 ± j0, 707 e avalie a resposta do sistema para uma entrada do tipo degrau unitário
 
 
 polos = [-0.707+i*0.707 -0.707-i*0.707]; %declarando os polos 
@@ -53,7 +53,7 @@ sis = ss(A_c, B_c, C_c, D_c);
 
 step(sis); % Resposta para uma 
 
-%% Projete um observador com as seguintes especificações de desempenho: ωn = 5 
+% Projete um observador com as seguintes especificações de desempenho: ωn = 5 
 %rad/s e ζ = 0, 5. Utilizando o Simulink, avalie o desempenho do observador
 %comparando as variáveis de estado do sistema com as variáveis estimadas (1,5
 %pts).
@@ -104,6 +104,54 @@ Q = tf(num, den)
 
 [A,B,C,D] = tf2ss(num,den)
 
+%Para esta questão é preciso fazer uma realimentação de estados para que o erro em regime
+%permanente seja 80%. Observando a equação (7.96) do livro do Nise. Temos que o erro em regime
+%permanente de um sistema em espaço de estados é:
 
+syms k
+aux = 1 + C*inv(A-B*k)*B == 0.8;
+k = solve(aux, k);
+k = double(k)
 
+Ac = A-B*k
+Bc = B;
+Cc = C;
+Dc = D;
+G = ss(Ac,Bc,Cc,Dc);
+step(G)
 
+%% Projete o sistema para ter controle integral e dois polos em s= -5. 
+%Mostre o desempenho do sistema
+%comprovando que o mesmo apresenta erro nulo em regime permanente.
+
+clc
+clear
+num = 1;
+den = [1 3];
+[A,B,C,D] = tf2ss(num,den)
+
+%Para resolver esta questão é preciso usar a equação 12.113a do Nise, i.e.,
+%Que trata-se da equação de um sistema com controlador integral, N é a ordem do sistema.
+%Pela equação é possível ver que os valores de K e Ke precisam ser encontrados. O sistema com
+%controlador integral é:
+
+syms k ke
+A_i = [A-B*k ke;-C 0];
+B_i = [0; 1];
+C_i = [C 0];
+D_i = 0;
+
+%Pelo enunciado da questão, já sabemos que o sistema desejado deve ter dois polos em
+%seja, seu polinômio característico desejado é: Q = s^2 + 10s + 25
+
+ke = 25;
+k = 7;
+A_i = [A-B*k ke; -C 0];
+B_i = [0; 1];
+C_i = [C 0];
+D_i = 0;
+G = ss(A_i,B_i,C_i,D_i);
+
+ess = 1 + C_i*inv(A_i)*B_i
+
+step(G)
